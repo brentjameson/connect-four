@@ -6,7 +6,7 @@ const entryPointContainer = document.querySelector(".entryPoint");
 const gameBoardArray = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41]
 
 // below array from https://dev.to/fakorededamilola/building-a-connect-four-game-with-javascript-1f45
-const winningArray = [ 
+let winningArray = [ 
   [0, 1, 2, 3], [41, 40, 39, 38],[7, 8, 9, 10], 
   [34, 33, 32, 31], [14, 15, 16, 17], [27, 26, 25, 24], 
   [21, 22, 23, 24], [20, 19, 18, 17], [28, 29, 30, 31], 
@@ -81,22 +81,30 @@ function createDivsForGameBoard(array) {
       if(sq1[0].hasChildNodes()){
         continue;
       }
-      else (!sq1[0].hasChildNodes());  
+
         const newDiv = document.createElement("div")
         if (counter % 2 === 0){
           newDiv.classList.add('piecesRed')
-        sq1[0].appendChild(newDiv);
+          sq1[0].appendChild(newDiv);
+          updateWinningArrayWithColor(parseInt(sq1[0].classList[0]), "red");
+          checkWon();
         return; 
         }
         else {
           newDiv.classList.add('piecesBlue')
-        sq1[0].appendChild(newDiv);
+          sq1[0].appendChild(newDiv);
+          updateWinningArrayWithColor(parseInt(sq1[0].classList[0]), "blue");
+          checkWon();
         return; 
         }
     }
   }
+
+  function updateWinningArrayWithColor(desiredUserSpot, color) {
+    winningArray = winningArray.map(subArray => subArray.map(number => number===desiredUserSpot ? color : number));
+  }
   
-  let counter = '0'
+  let counter = 0;
 
   gameAndEntryContainer.addEventListener('click', function(e){
     // console.log(e.target);
@@ -158,12 +166,16 @@ function createDivsForGameBoard(array) {
 // 
 
 function checkWon() {
-  let squares = document.querySelectorAll('.piecesBlue')
+  // let squares = document.querySelectorAll('.piecesBlue')
   for (let square of winningArray) {
-    console.log(square)
-  square.every(containsNum)
-  };
-  alert('Blue wins!')
+    // console.log(square)
+    if(square.every(cell => cell === "blue")) {
+      alert('Blue wins!');
+    } else if(square.every(cell => cell === "red")) {
+      alert('Red wins!');
+    }
+
+  }
 }
 
 function containsNum(val){
